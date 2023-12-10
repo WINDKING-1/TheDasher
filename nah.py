@@ -23,7 +23,7 @@ while True:
         use=input("Enter what are u gonna use?: ")
     y=eval(input("Enter y:"))
     if use=="+":
-        final=sum(x,y)  
+        final=sum(x,y)
     if use=="-":
         final=minus(x,y)
     if use=="*":
