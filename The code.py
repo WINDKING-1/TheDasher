@@ -34,9 +34,9 @@ while True:
     screen.blit(snail_surf,(snail_rect.x,270))
 
     snail_rect.x+=snailmove
-    #if snail_rect.x<=3 or snail_rect.x>=735:
-        #snailmove= -1*snailmove
-        #snail_surf = pygame.transform.flip(snail_surf, True, False)
+    if snail_rect.x<=3 or snail_rect.x>=735:
+        snailmove= -1*snailmove
+        snail_surf = pygame.transform.flip(snail_surf, True, False)
     if snail_rect.right<=0: snail_rect.x=800 
     if player_rect.colliderect(snail_rect):
         print("No")
