@@ -9,15 +9,16 @@ pygame.display.set_icon(icon)
 Text_font = pygame.font.Font(r'font/Pixeltype.ttf',50)
 fps=pygame.time.Clock()
 
-Sky_surf=pygame.image.load(r'bettersky.png').convert()
-Ground_surf=pygame.image.load(r'e1.png').convert()
+Sky_surf=pygame.image.load(r'sky.jpg').convert()
+Ground_surf=pygame.image.load(r'e4.png').convert()
+Ground_rect=Ground_surf.get_rect(bottomleft=(0,400))
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
-player_rect=player_surf.get_rect(midbottom=(800,350))
-player_movement=5
+player_rect=player_surf.get_rect(midbottom=(700,352))
+player_movement=7
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
-left=False
+left=True
 
 while True:
     for event in pygame.event.get():
@@ -25,9 +26,10 @@ while True:
             pygame.quit()
             exit()
 
-    screen.blit(Sky_surf,(0,0))
+    screen.blit(Sky_surf,(-570,-500))
     screen.blit(Ground_surf,(0,350))
     screen.blit(player_surf,player_rect)
+
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT]:
