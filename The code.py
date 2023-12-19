@@ -22,7 +22,7 @@ snail_rect = snail_surf.get_rect(midbottom=(600,300))
 player_surf = pygame.image.load(r'graphics/Player/player_walk_1.png').convert_alpha()
 player_rect = player_surf.get_rect(midbottom=(80,300))
 
-snailmove = random.randint(0, 50)*-1
+snailmove=-3
 
 while True:
     for event in pygame.event.get():
