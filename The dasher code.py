@@ -1,7 +1,6 @@
-#Mohamed Salama Id:231000359
-#Zain elabdeen osama id:231000356
-#Abdelrahman mohamed hassan id:231001730
-
+#Zain elabdeen osama ID:231000356
+#Mohamed Salama ID:231000359
+#Abdelrahman mohamed hassan ID:231001730
 
 import pygame
 from sys import exit
@@ -25,7 +24,7 @@ player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(700,352))
 player_movement=5
 player_fallseed=8
-player_jump=20
+player_jump=10
 player_aircount = 5
 
 dashavailabe=True
@@ -52,14 +51,18 @@ while True:
 
     if player_rect.colliderect(Ground_rect):
         airborn=False
-        player_aircount=5
+        player_aircount=6
     else:
         airborn=True
-    if player_aircount == 5:
+        
+    if player_aircount == 6:
         player_rect.y += player_fallseed
-    if player_aircount < 5:
+
+    if player_aircount < 6:
         player_rect.y -= player_aircount * player_jump
 
+    if player_aircount !=6:
+        player_aircount+=1
     
     if not dashavailabe and (pygame.time.get_ticks()-last_dashtimer)>dash_cd:
         dashavailabe=True
@@ -83,7 +86,7 @@ while True:
     if dashavailabe:
         if keys[pygame.K_LSHIFT]:
             if keys[pygame.K_w]:
-                player_rect.y -= player_movement
+                player_rect.y -= player_movement*4
                 
 
             if left:
@@ -105,9 +108,6 @@ while True:
         player_surf = playerright
     if player_rect.y > 259:
         player_rect.y = 259
-    
-    if player_aircount !=5:
-        player_aircount+=1
         
     
     pygame.display.update()
