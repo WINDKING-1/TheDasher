@@ -70,7 +70,7 @@ while True:
     if keys[pygame.K_d]:
         player_rect.x += player_movement
         left=False
-    if keys[pygame.K_w] and not airborn:
+    if keys[pygame.K_SPACE] and not airborn:
         player_rect.y -= player_jump
         player_aircount = 1
 
@@ -112,4 +112,3 @@ while True:
     
     pygame.display.update()
     fps.tick(60)
-    
