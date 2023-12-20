@@ -1,3 +1,6 @@
+#Mohamed Salama Id:231000359
+#Zain elabdeen osama 231000356
+#Abdelrahman mohamed hassan 231001730
 import pygame
 from sys import exit
 
@@ -15,7 +18,7 @@ Ground_rect=Ground_surf.get_rect(bottomleft=(0,400))
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(700,352))
-player_movement=7
+player_movement=5
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
 left=True
