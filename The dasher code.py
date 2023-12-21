@@ -5,6 +5,7 @@
 import pygame
 from sys import exit
 
+
 pygame.init()
 screen = pygame.display.set_mode((800,400))
 pygame.display.set_caption("The Dasher v0.01")
@@ -35,6 +36,12 @@ last_dashtimer=0
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
 left=True
+
+def playergoright():
+    player_rect.x += player_movement
+
+def playergoleft():
+    player_rect.x -= player_movement
 
 while True:
     for event in pygame.event.get():
@@ -68,10 +75,10 @@ while True:
         dashavailabe=True
 
     if keys[pygame.K_a]:
-        player_rect.x -= player_movement
+        playergoleft()
         left=True
     if keys[pygame.K_d]:
-        player_rect.x += player_movement
+        playergoright()
         left=False
     if keys[pygame.K_SPACE] and not airborn:
         player_rect.y -= player_jump
@@ -86,7 +93,7 @@ while True:
     if dashavailabe:
         if keys[pygame.K_LSHIFT]:
             if keys[pygame.K_w]:
-                player_rect.y -= player_movement*4
+                player_rect.y -= player_movement*14
                 
 
             if left:
