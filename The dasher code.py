@@ -47,7 +47,7 @@ def player_y_min():
     if player_rect.y > 259:
         player_rect.y = 259
 
-def disdancecap():
+def distancecap():
     if player_rect.x<=-51:
         player_rect.x=775
     if player_rect.x>=780:
@@ -82,6 +82,7 @@ while True:
         lvl1()
     elif level==2:
         lvl2()
+    
     keys = pygame.key.get_pressed()
 
     if player_rect.colliderect(Ground_rect):
@@ -97,7 +98,7 @@ while True:
         player_rect.y += player_aircount * player_jump
 
     if player_aircount !=0:
-        player_aircount+=1
+        player_aircount +=1
     
     if not dashavailabe and (pygame.time.get_ticks()-last_dashtimer)>dash_cd:
         dashavailabe=True
@@ -136,7 +137,7 @@ while True:
                 dashavailabe=False
                 last_dashtimer=pygame.time.get_ticks()
 
-    disdancecap()
+    distancecap()
 
     if left:
         player_surf = playerleft
