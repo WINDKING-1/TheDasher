@@ -24,8 +24,8 @@ Ground_surf2=pygame.image.load(r'e4.png').convert()
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(700,352))
 player_movement=5
-player_fallseed=9.8
-player_jump=3
+player_fallseed=8
+player_jump=2.9
 player_aircount = -8
 
 dashavailabe=True
@@ -65,6 +65,12 @@ def lvl2():
     screen.blit(Sky_surf2,(-570,-500))
     screen.blit(Ground_surf2,(0,351))
     screen.blit(player_surf,player_rect)
+
+def dash_up():
+    player_rect.y -= dash_d
+
+def dash_down():
+    player_rect.y += dash_d
 
 while True:
     for event in pygame.event.get():
@@ -115,8 +121,10 @@ while True:
     if dashavailabe:
         if keys[pygame.K_LSHIFT]:
             if keys[pygame.K_w]:
-                player_rect.y -= player_movement*14
-                
+                dash_up()
+
+            if keys[pygame.K_s]:
+                dash_down()
 
             if left:
                 player_rect.x-=dash_d
@@ -129,6 +137,7 @@ while True:
                 last_dashtimer=pygame.time.get_ticks()
 
     disdancecap()
+
     if left:
         player_surf = playerleft
     else:
