@@ -24,8 +24,8 @@ Ground_surf2=pygame.image.load(r'e4.png').convert()
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(700,352))
 player_movement=5
-player_fallseed=8
-player_jump=5
+player_fallseed=9.8
+player_jump=3
 player_aircount = -8
 
 dashavailabe=True
@@ -106,7 +106,7 @@ while True:
 
     if keys[pygame.K_SPACE] and not airborn:
         player_rect.y -= player_jump
-        player_aircount = -7
+        player_aircount = -9
 
     if keys[pygame.K_s]:
         for i in range(-3,0):
