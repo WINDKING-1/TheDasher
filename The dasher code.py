@@ -12,7 +12,7 @@ icon = pygame.image.load(r"thedasher.png")
 pygame.display.set_icon(icon)
 Text_font = pygame.font.Font(r'font/Pixeltype.ttf',35)
 fps=pygame.time.Clock()
-
+fps_value=60
 level=1
 
 Sky_surf=pygame.image.load(r'bettersky.png').convert()
@@ -20,6 +20,7 @@ Ground_surf=pygame.image.load(r'download.png').convert()
 Ground_rect=Ground_surf.get_rect(bottomleft=(0,400))
 Sky_surf2=pygame.image.load(r'sky.jpg').convert()
 Ground_surf2=pygame.image.load(r'e4.png').convert()
+death_screen_surf=pygame.image.load(r'died1.jpg').convert()
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(700,352))
@@ -33,16 +34,22 @@ dash_d=120
 dash_cd=600
 last_dashtimer=0
 
-combo_count=0
-combo_font_size=35
-combo_font = pygame.font.Font(r'font/Pixeltype.ttf',combo_font_size)
+combo_count=4
+combo_1_size=30
+combo_2_size=40
+combo_3_size=50
+combo_4_size=65
+combo_font_1 = pygame.font.Font(r'font/Pixeltype.ttf',combo_1_size)
+combo_font_2 = pygame.font.Font(r'font/Pixeltype.ttf',combo_2_size)
+combo_font_3 = pygame.font.Font(r'font/Pixeltype.ttf',combo_3_size)
+combo_font_4 = pygame.font.Font(r'font/Pixeltype.ttf',combo_4_size)
 
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
 left=True
 
-player_health=70
-Health_text= str(player_health)+"%"
+player_health=100
+Alive=True
 
 def playergoright():
     player_rect.x += player_movement
@@ -72,6 +79,10 @@ def lvl2():
     screen.blit(Sky_surf2,(-570,-500))
     screen.blit(Ground_surf2,(0,351))
     screen.blit(player_surf,player_rect)
+
+def deathscreen():
+    screen.blit(death_screen_surf,(0,0))
+    player_died=True
 
 def dash_up():
     player_rect.y -= dash_d
@@ -105,32 +116,59 @@ def status_text():
 
     else:
         Health_color='green'
+    if player_health==100:
+        player_health_text=str(player_health)
+    else:
+        player_health_text=str(player_health)[:3]
+    Health_text= str(player_health_text)+"%"
     
     Health_surf=Text_font.render(Health_text, True,Health_color)
     screen.blit(Health_surf,(20,20))
 
 def combo_coloring():
+    combo='x'+str(combo_count)
     if combo_count==0:
         combo_color='white'
+        Combo_surf=Text_font.render(combo, True,combo_color)
     elif combo_count==1:
         combo_color='yellow'
-        combo_font_size=55
-        
-    combo='x'+str(combo_count)
-    Combo_surf=combo_font.render(combo, True,combo_color)
-    screen.blit(Combo_surf,(20,40))
+        Combo_surf=combo_font_1.render(combo, True,combo_color)
+    elif combo_count==2:
+        combo_color='red'
+        Combo_surf=combo_font_2.render(combo, True,combo_color)
+    elif combo_count==3:
+        combo_color='blue'
+        Combo_surf=combo_font_3.render(combo, True,combo_color)
+    elif combo_count>=4:
+        combo_color='green'
+        Combo_surf=combo_font_4.render(combo, True,combo_color)
 
+    screen.blit(Combo_surf,(400,20))
+
+def player_dead_check():
+    global level
+    global Alive
+    global fps_value
+    if player_health<=0:
+        level=0
+        Alive=False
+        fps_value=5
+        
 while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             pygame.quit()
             exit()
 
+    player_dead_check()
+
     if level==1:
         lvl1()
     elif level==2:
         lvl2()
-    
+    elif level==0:
+        deathscreen()
+    player_health-=0.5
     keys = pygame.key.get_pressed()
 
     if player_rect.colliderect(Ground_rect):
@@ -192,9 +230,11 @@ while True:
 
     distancecap()
     player_y_min()
-    status_text()
-    combo_coloring()
+    if Alive:
+        combo_coloring()
     Health_min()
+    status_text()
 
     pygame.display.update()
-    fps.tick(60)
+    fps.tick(fps_value)
+    
