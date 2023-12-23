@@ -103,7 +103,7 @@ def Health_min():
 
 def player_bleed():
     global player_health
-    player_health-=0.05
+    player_health-=0.1
 
 def status_text():
     if player_health<=10:
