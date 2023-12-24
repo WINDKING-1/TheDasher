@@ -48,7 +48,7 @@ playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
 left=True
 
-player_health=100
+player_health=150
 Alive=True
 
 def playergoright():
@@ -100,6 +100,8 @@ def Health_min():
     global player_health
     if player_health<0:
         player_health=0
+    if player_health>100:
+        player_health=100
 
 def player_bleed():
     global player_health
@@ -120,12 +122,18 @@ def status_text():
 
     else:
         Health_color='green'
+
+
     if player_health==100:
         player_health_text=str(player_health)
+
+    elif player_health >=10:
+        player_health_text=str(player_health)[:2]
+
     else:
         player_health_text=str(player_health)[:3]
+
     Health_text= str(player_health_text)+"%"
-    
     Health_surf=Text_font.render(Health_text, True,Health_color)
     screen.blit(Health_surf,(20,20))
 
