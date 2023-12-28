@@ -23,6 +23,7 @@ dash_timer=0
 direction = 1
 DASH_DURATION = 10
 DASH_DISTANCE = 100
+Dash_long=15
 dash_delay = 60
 last_dash=None
 double_jumped=False
@@ -198,11 +199,11 @@ while True:
         player_dash2 = False
 
     if player_dash:
-        if dash_timer < DASH_DURATION:
+        if dash_timer < Dash_long:
             player_rect.x += (direction * DASH_DISTANCE) / DASH_DURATION
             dash_timer += 1
 
-    if dash_timer >= 10:
+    if dash_timer >= Dash_long:
         if dash_delay > 0:
             dash_delay -=1
         else:
@@ -210,16 +211,16 @@ while True:
             dash_delay = 40
 
     if player_dash1:
-        if dash_timer < DASH_DURATION:
+        if dash_timer < Dash_long:
             player_rect.x -= (direction * DASH_DISTANCE) / DASH_DURATION
             dash_timer += 1
 
     if player_dash2:
-        if dash_timer < DASH_DURATION:
+        if dash_timer < Dash_long:
             player_rect.y -= 100 / DASH_DURATION
             dash_timer += 1
     
-    if dash_timer >= 10:
+    if dash_timer >= Dash_long:
         dashing=False
         if dash_delay > 0:
             dash_delay -=1
