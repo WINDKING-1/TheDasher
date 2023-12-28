@@ -18,12 +18,14 @@ level=1
 player_dash = False
 player_dash1 = False
 player_dash2 = False
+dashing=False
 dash_timer=0
 direction = 1
 DASH_DURATION = 10
 DASH_DISTANCE = 100
 dash_delay = 60
-
+last_dash=None
+double_jumped=False
 Sky_surf=pygame.image.load(r'bettersky.png').convert()
 Ground_surf=pygame.image.load(r'download.png').convert()
 Ground_rect=Ground_surf.get_rect(bottomleft=(0,400))
@@ -52,7 +54,7 @@ playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
 left=True
 
-player_health=150
+player_health=24
 Alive=True
 
 def playergoright():
@@ -97,7 +99,7 @@ def Health_min():
 
 def player_bleed():
     global player_health
-    player_health-=0
+    player_health-=0.1
 
 def status_text():
     if player_health<=10:
@@ -159,21 +161,23 @@ def player_dead_check():
         fps_value=5
 
         
-# ... (previous code)
-
 while True:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type==pygame.QUIT:
             pygame.quit()
             exit()
 
     player_dead_check()
 
-    if level == 1:
+    if dash_timer!=0:
+        dashing=True
+    
+
+    if level==1:
         lvl1()
-    elif level == 2:
+    elif level==2:
         lvl2()
-    elif level == 0:
+    elif level==0:
         deathscreen()
 
     keys = pygame.key.get_pressed()
@@ -182,7 +186,7 @@ while True:
         player_dash = True
     else:
         player_dash = False
-
+    
     if keys[pygame.K_LSHIFT] and keys[pygame.K_a]:
         player_dash1 = True
     else:
@@ -200,7 +204,7 @@ while True:
 
     if dash_timer >= 10:
         if dash_delay > 0:
-            dash_delay -= 1
+            dash_delay -=1
         else:
             player_dash = False
             dash_delay = 40
@@ -212,52 +216,62 @@ while True:
 
     if player_dash2:
         if dash_timer < DASH_DURATION:
-            # Adjust the vertical movement during the upward dash
-            player_rect.y -= DASH_DISTANCE / DASH_DURATION
+            player_rect.y -= 100 / DASH_DURATION
             dash_timer += 1
-
+    
     if dash_timer >= 10:
+        dashing=False
         if dash_delay > 0:
-            dash_delay -= 1
+            dash_delay -=1
         else:
-            player_dash2 = False
             dash_timer = 0
             dash_delay = 40
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
-            airborn = False
-            player_aircount = 0
+            airborn=False
+            player_aircount=0
+            double_jumped=False
         else:
-            airborn = True
-
-        if player_aircount == 0 and airborn and dash_timer >= 1:
-            gravity()
+            airborn=True
 
         if player_aircount < 0:
             player_rect.y += player_aircount * player_jump
 
-        if player_aircount != 0:
-            player_aircount += 1
+        if player_aircount !=0:
+            player_aircount +=1
 
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             playergoleft()
-            left = True
+            left=True
 
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             playergoright()
-            left = False
+            left=False
 
         if keys[pygame.K_SPACE] and not airborn:
             player_rect.y -= player_jump
             player_aircount = -9
+
+        if keys[pygame.K_SPACE] and airborn and player_aircount==0 and not double_jumped:
+                player_rect.y -= player_jump
+                player_aircount = -6
+                double_jumped=True
 
     if left:
         player_surf = playerleft
     else:
         player_surf = playerright
 
-    player_bleed()
+    if last_dash==dash_timer:
+            dashing=False
+        
+    if player_aircount == 0 and airborn:
+        last_dash=dash_timer
+        if not dashing:
+            gravity()
+
+    #player_bleed()
     distancecap()
     player_y_min()
     if Alive:
