@@ -37,6 +37,8 @@ Monster_rect=Monster.get_rect(midbottom=(650,352))
 monster_aircount=0
 Monster_jump_timer = 110
 monster_jump=0.9
+monster_movespeed=2.5
+
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(200,352))
@@ -58,8 +60,11 @@ combo_font_4 = pygame.font.Font(r'font/Pixeltype.ttf',combo_4_size)
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
 
-monster_left_surf=Monster
+
 monster_right_surf=pygame.transform.flip(Monster,True,False)
+monster_left_surf=pygame.transform.flip(monster_right_surf,True,False)
+monster_surf=monster_left_surf
+
 left=True
 
 player_health=24
@@ -91,8 +96,9 @@ def monster_gravity():
 def lvl1():
     screen.blit(Sky_surf,(0,0))
     screen.blit(Ground_surf,(0,351))
+    screen.blit(monster_surf,Monster_rect)
     screen.blit(player_surf,player_rect)
-    screen.blit(Monster,Monster_rect)
+
 
 def lvl2():
     screen.blit(Sky_surf2,(-570,-500))
@@ -187,10 +193,11 @@ while True:
         dashing=True
     
     if Monster_rect.x-player_rect.x>60:
-        Monster_rect.x-=3
+        Monster_rect.x-=monster_movespeed
         monster_left=True
+        
     elif Monster_rect.x-player_rect.x<-160:
-        Monster_rect.x+=3
+        Monster_rect.x+=monster_movespeed
         monster_left=False
 
 
@@ -287,9 +294,9 @@ while True:
         player_surf = playerright
 
     if monster_left:
-        monster_left_surf
+        monster_surf=monster_left_surf
     else:
-        monster_right_surf
+        monster_surf=monster_right_surf
 
     if last_dash==dash_timer:
             dashing=False
