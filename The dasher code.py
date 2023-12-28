@@ -22,7 +22,7 @@ dashing=False
 dash_timer=0
 DASH_DURATION = 10
 DASH_DISTANCE = 100
-Dash_long=15
+Dash_long=8
 dash_delay = 60
 last_dash=None
 double_jumped=False
@@ -92,7 +92,7 @@ def lvl1():
     screen.blit(Sky_surf,(0,0))
     screen.blit(Ground_surf,(0,351))
     screen.blit(player_surf,player_rect)
-    screen.blit(Monster,Monster_rect)
+    #screen.blit(Monster,Monster_rect)
 
 def lvl2():
     screen.blit(Sky_surf2,(-570,-500))
@@ -220,18 +220,19 @@ while True:
 
     if player_dash:
         if dash_timer < Dash_long:
-            player_rect.x += DASH_DISTANCE /  DASH_DURATION
+            player_rect.x +=20
             dash_timer += 1
 
     if player_dash1:
         if dash_timer < Dash_long:
-            player_rect.x -=  DASH_DISTANCE / DASH_DURATION
+            player_rect.x -=20
             dash_timer += 1
 
     if dash_timer >= Dash_long:
         dashing=False
         if dash_delay > 0:
             dash_delay -=1
+            print(dash_delay)
         else:
             dash_timer = 0
             dash_delay = 60
