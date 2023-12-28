@@ -34,7 +34,7 @@ Sky_surf2=pygame.image.load(r'sky.jpg').convert()
 Ground_surf2=pygame.image.load(r'e4.png').convert()
 death_screen_surf=pygame.image.load(r'died1.jpg').convert()
 Monster=pygame.image.load(r"monsterr.png").convert_alpha()
-Monster_rect=Monster.get_rect(bottomright=(800,352))
+Monster_rect=Monster.get_rect(midbottom=(650,352))
 Monster_jump_timer=50
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
@@ -56,6 +56,9 @@ combo_font_4 = pygame.font.Font(r'font/Pixeltype.ttf',combo_4_size)
 
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
+
+monster_left_surf=Monster
+monster_right_surf=pygame.transform.flip(Monster,True,False)
 left=True
 
 player_health=24
@@ -78,7 +81,12 @@ def distancecap():
         player_rect.x=-50 
 
 def gravity():
-    player_rect.y += player_fallseed
+    if player_rect.colliderect(Ground_rect):
+        player_rect.y += player_fallseed
+
+def monster_gravity():
+    if not Monster_rect.colliderect(Ground_rect):
+        Monster_rect.y += player_fallseed
 
 def lvl1():
     screen.blit(Sky_surf,(0,0))
@@ -178,6 +186,13 @@ while True:
     if dash_timer!=0:
         dashing=True
     
+    if Monster_rect.x-player_rect.x>60:
+        Monster_rect.x-=3
+        monster_left=True
+    elif Monster_rect.x-player_rect.x<-160:
+        Monster_rect.x+=3
+        monster_left=False
+
 
     if level==1:
         lvl1()
@@ -264,6 +279,11 @@ while True:
     else:
         player_surf = playerright
 
+    if monster_left:
+        monster_left_surf
+    else:
+        monster_right_surf
+
     if last_dash==dash_timer:
             dashing=False
         
@@ -279,6 +299,7 @@ while True:
         combo_coloring()
     Health_min()
     status_text()
+    monster_gravity()
 
     pygame.display.update()
     fps.tick(fps_value)
