@@ -208,7 +208,7 @@ while True:
             dash_delay -=1
         else:
             player_dash = False
-            dash_delay = 40
+            dash_delay = 60
 
     if player_dash1:
         if dash_timer < Dash_long:
@@ -226,7 +226,7 @@ while True:
             dash_delay -=1
         else:
             dash_timer = 0
-            dash_delay = 40
+            dash_delay = 60
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
