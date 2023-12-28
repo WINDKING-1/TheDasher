@@ -92,7 +92,7 @@ def lvl1():
     screen.blit(Sky_surf,(0,0))
     screen.blit(Ground_surf,(0,351))
     screen.blit(player_surf,player_rect)
-    #screen.blit(Monster,Monster_rect)
+    screen.blit(Monster,Monster_rect)
 
 def lvl2():
     screen.blit(Sky_surf2,(-570,-500))
@@ -228,14 +228,16 @@ while True:
             player_rect.x -=20
             dash_timer += 1
 
-    if dash_timer >= Dash_long:
-        dashing=False
+    if dash_timer >= 1:
         if dash_delay > 0:
             dash_delay -=1
             print(dash_delay)
         else:
             dash_timer = 0
             dash_delay = 60
+
+    if dash_timer >= Dash_long:
+        dashing=False
 
     if Monster_jump_timer >= 0:
         Monster_jump_timer -= 1
