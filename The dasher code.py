@@ -33,9 +33,12 @@ Ground_rect=Ground_surf.get_rect(bottomleft=(0,400))
 Sky_surf2=pygame.image.load(r'sky.jpg').convert()
 Ground_surf2=pygame.image.load(r'e4.png').convert()
 death_screen_surf=pygame.image.load(r'died1.jpg').convert()
+Monster=pygame.image.load(r"monsterr.png").convert_alpha()
+Monster_rect=Monster.get_rect(bottomright=(800,352))
+Monster_jump_timer=50
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
-player_rect=player_surf.get_rect(midbottom=(700,352))
+player_rect=player_surf.get_rect(midbottom=(200,352))
 player_movement=5
 player_fallseed=8
 player_jump=2.9
@@ -81,11 +84,13 @@ def lvl1():
     screen.blit(Sky_surf,(0,0))
     screen.blit(Ground_surf,(0,351))
     screen.blit(player_surf,player_rect)
+    screen.blit(Monster,Monster_rect)
 
 def lvl2():
     screen.blit(Sky_surf2,(-570,-500))
     screen.blit(Ground_surf2,(0,351))
     screen.blit(player_surf,player_rect)
+
 
 def deathscreen():
     screen.blit(death_screen_surf,(0,0))
@@ -200,26 +205,14 @@ while True:
 
     if player_dash:
         if dash_timer < Dash_long:
-            player_rect.x += (direction * DASH_DISTANCE) / DASH_DURATION
+            player_rect.x += DASH_DISTANCE /  DASH_DURATION
             dash_timer += 1
-
-    if dash_timer >= Dash_long:
-        if dash_delay > 0:
-            dash_delay -=1
-        else:
-            player_dash = False
-            dash_delay = 60
 
     if player_dash1:
         if dash_timer < Dash_long:
-            player_rect.x -= (direction * DASH_DISTANCE) / DASH_DURATION
+            player_rect.x -=  DASH_DISTANCE / DASH_DURATION
             dash_timer += 1
 
-    if player_dash2:
-        if dash_timer < Dash_long:
-            player_rect.y -= 100 / DASH_DURATION
-            dash_timer += 1
-    
     if dash_timer >= Dash_long:
         dashing=False
         if dash_delay > 0:
@@ -227,6 +220,13 @@ while True:
         else:
             dash_timer = 0
             dash_delay = 60
+
+    if Monster_jump_timer > 0:
+        Monster_jump_timer-=1
+    else:
+        Monster_rect.y -= player_jump
+        player_aircount = -9
+        Monster_jump_timer = 50
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
