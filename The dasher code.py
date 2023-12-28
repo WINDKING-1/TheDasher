@@ -35,7 +35,9 @@ Ground_surf2=pygame.image.load(r'e4.png').convert()
 death_screen_surf=pygame.image.load(r'died1.jpg').convert()
 Monster=pygame.image.load(r"monsterr.png").convert_alpha()
 Monster_rect=Monster.get_rect(midbottom=(650,352))
-Monster_jump_timer=50
+monster_aircount=-17
+Monster_jump_timer = 200
+monster_jump=0.9
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(200,352))
@@ -81,7 +83,6 @@ def distancecap():
         player_rect.x=-50 
 
 def gravity():
-    if player_rect.colliderect(Ground_rect):
         player_rect.y += player_fallseed
 
 def monster_gravity():
@@ -236,12 +237,16 @@ while True:
             dash_timer = 0
             dash_delay = 60
 
-    if Monster_jump_timer > 0:
-        Monster_jump_timer-=1
-    else:
-        Monster_rect.y -= player_jump
-        player_aircount = -9
-        Monster_jump_timer = 50
+    if Monster_jump_timer >= 0:
+        Monster_jump_timer -= 1
+
+    if Monster_jump_timer <= 0:
+        monster_aircount = -30
+        Monster_jump_timer = 200
+
+    if monster_aircount < 0:
+        Monster_rect.y += monster_aircount * monster_jump
+        monster_aircount += 1
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
