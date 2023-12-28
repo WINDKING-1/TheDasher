@@ -20,7 +20,6 @@ player_dash1 = False
 player_dash2 = False
 dashing=False
 dash_timer=0
-direction = 1
 DASH_DURATION = 10
 DASH_DISTANCE = 100
 Dash_long=15
@@ -35,8 +34,8 @@ Ground_surf2=pygame.image.load(r'e4.png').convert()
 death_screen_surf=pygame.image.load(r'died1.jpg').convert()
 Monster=pygame.image.load(r"monsterr.png").convert_alpha()
 Monster_rect=Monster.get_rect(midbottom=(650,352))
-monster_aircount=-17
-Monster_jump_timer = 200
+monster_aircount=0
+Monster_jump_timer = 110
 monster_jump=0.9
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
