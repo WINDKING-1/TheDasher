@@ -38,8 +38,9 @@ Monster=pygame.image.load(r"monsterr.png").convert_alpha()
 Monster_rect=Monster.get_rect(midbottom=(650,352))
 monster_aircount=0
 Monster_jump_timer = 110
-monster_jump=0.9
+monster_jump=0.7
 monster_movespeed=2.5
+monster_fallspeed=9
 
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
@@ -99,7 +100,7 @@ def gravity():
 
 def monster_gravity():
     if not Monster_rect.colliderect(Ground_rect):
-        Monster_rect.y += player_fallseed
+        Monster_rect.y += monster_fallspeed
 
 def lvl1():
     screen.blit(Sky_surf,(0,0))
@@ -266,7 +267,7 @@ while True:
         Monster_jump_timer -= 1
 
     if Monster_jump_timer <= 0:
-        monster_aircount = -30
+        monster_aircount = -34
         Monster_jump_timer = 200
 
     if monster_aircount < 0:
