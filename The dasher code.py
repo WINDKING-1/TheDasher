@@ -35,13 +35,17 @@ Sky_surf2=pygame.image.load(r'sky.jpg').convert()
 Ground_surf2=pygame.image.load(r'e4.png').convert()
 death_screen_surf=pygame.image.load(r'died1.jpg').convert()
 Monster=pygame.image.load(r"monsterr.png").convert_alpha()
-Monster_rect=Monster.get_rect(midbottom=(650,352))
+monster_1=pygame.image.load(r"monster1.png").convert_alpha()
+monster_2=pygame.image.load(r"monster2.png").convert_alpha()
+Monster_rect=Monster.get_rect(midbottom=(450,352))
 monster_aircount=0
 Monster_jump_timer = 110
 monster_jump=0.7
 monster_movespeed=2.5
 monster_fallspeed=9
-
+monster_charged=False
+monster_jump_damdge=15
+monster_health=100
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(200,352))
@@ -49,6 +53,7 @@ player_movement=5
 player_fallseed=8
 player_jump=2.9
 player_aircount = -8
+got_hit_count=0
 
 combo_count=4
 combo_1_size=30
@@ -60,6 +65,9 @@ combo_font_2 = pygame.font.Font(r'font/Pixeltype.ttf',combo_2_size)
 combo_font_3 = pygame.font.Font(r'font/Pixeltype.ttf',combo_3_size)
 combo_font_4 = pygame.font.Font(r'font/Pixeltype.ttf',combo_4_size)
 
+player_attack_damdge=5
+attack_cd=0
+
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
 
@@ -70,7 +78,7 @@ monster_surf=monster_left_surf
 
 left=True
 
-player_health=24
+player_health=100
 Alive=True
 
 def playergoright():
@@ -128,7 +136,7 @@ def Health_min():
 
 def player_bleed():
     global player_health
-    player_health-=0.1
+    player_health-=0.05
 
 def status_text():
     if player_health<=10:
@@ -160,25 +168,36 @@ def status_text():
     Health_surf=Text_font.render(Health_text, True,Health_color)
     screen.blit(Health_surf,(20,20))
 
+def monster_skin():
+    global Monster
+    global monster_1
+    global monster_2
+    global monster_surf
+    global monster_health
+    if monster_health>=80:
+        monster_surf=Monster
+    elif monster_health>=40:
+        monster_surf=monster_1
+    else:
+        monster_surf=monster_2
+
 def combo_coloring():
-    combo='x'+str(combo_count)
-    if combo_count==0:
+    if combo_count!=0:
+        combo='x'+str(combo_count)
+    if combo_count==1:
         combo_color='white'
-        Combo_surf=Text_font.render(combo, True,combo_color)
-    elif combo_count==1:
-        combo_color='yellow'
         Combo_surf=combo_font_1.render(combo, True,combo_color)
     elif combo_count==2:
-        combo_color='red'
+        combo_color='green'
         Combo_surf=combo_font_2.render(combo, True,combo_color)
     elif combo_count==3:
         combo_color='blue'
         Combo_surf=combo_font_3.render(combo, True,combo_color)
     elif combo_count>=4:
-        combo_color='green'
+        combo_color='red'
         Combo_surf=combo_font_4.render(combo, True,combo_color)
-
-    screen.blit(Combo_surf,(400,20))
+    if combo_count!=0:
+        screen.blit(Combo_surf,(400,20))
 
 def player_dead_check():
     global level
@@ -189,24 +208,80 @@ def player_dead_check():
         Alive=False
         fps_value=5
 
-        
-while True:
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            pygame.quit()
-            exit()
+def combo_reset():
+    global combo_count
+    combo_count=0
 
-    player_dead_check()
+def monster_jump_system():
+    global Monster_jump_timer
+    global monster_aircount
+    global Monster_rect
+    global monster_charged
 
-    if dash_timer!=0:
-        dashing=True
-    
+    if Monster_jump_timer >= 0:
+        Monster_jump_timer -= 1
+
+    if Monster_jump_timer <= 0:
+        monster_aircount = -34
+        Monster_jump_timer = 150
+        monster_charged=True
+
+    if monster_aircount < 0:
+        Monster_rect.y += monster_aircount * monster_jump
+        monster_aircount += 1
+
+def monster_movement_system():
+    global Monster_rect
+    global player_rect
+    global monster_movespeed
+
     if Monster_rect.x-player_rect.x>60:
         Monster_rect.x-=monster_movespeed
         
     elif Monster_rect.x-player_rect.x<-125:
         Monster_rect.x+=monster_movespeed/1.5
-        
+
+def player_attack():
+    global combo_count
+    global left
+    global player_rect
+    global Monster_rect
+    global player_attack_damdge
+    global monster_health
+    global player_health
+
+    if (left and not monster_left) or (not left and monster_left):
+        if player_rect.x-Monster_rect.x>=-90 and player_rect.x-Monster_rect.x<=155:
+            monster_health-=player_attack_damdge
+            print(monster_health)
+            combo_count+=1
+    elif player_rect.x-Monster_rect.x>=-30 and player_rect.x-Monster_rect.x<=95:
+        monster_health-=player_attack_damdge
+        print(monster_health)
+        combo_count+=1
+    if combo_count>=4:
+        player_health+=3
+
+while True:
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
+            if attack_cd==0:
+                attack_cd+=15
+                player_attack()
+
+
+    player_dead_check()
+
+    if attack_cd!=0:
+        attack_cd-=1
+
+    if dash_timer!=0:
+        dashing=True
+    
+    monster_movement_system()
 
     if Monster_rect.x-player_rect.x>-27:
         monster_left=True
@@ -263,16 +338,16 @@ while True:
     if dash_timer >= Dash_long:
         dashing=False
 
-    if Monster_jump_timer >= 0:
-        Monster_jump_timer -= 1
+    monster_jump_system()
 
-    if Monster_jump_timer <= 0:
-        monster_aircount = -34
-        Monster_jump_timer = 200
-
-    if monster_aircount < 0:
-        Monster_rect.y += monster_aircount * monster_jump
-        monster_aircount += 1
+    if monster_charged and monster_aircount==0:
+        if Monster_rect.colliderect(Ground_rect):
+            monster_charged=False
+            if Monster_rect.x-player_rect.x<=120 and Monster_rect.x-player_rect.x>=-205:
+                player_health-=monster_jump_damdge
+                combo_reset()
+                got_hit_count+=1
+                print("hit number",got_hit_count)
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
@@ -323,7 +398,7 @@ while True:
         if not dashing:
             gravity()
 
-    #player_bleed()
+    player_bleed()
     if (dashing_ineffect0 or dashing_ineffect1) and (player_dash or player_dash1):
         player_teleport()
     else:
@@ -335,6 +410,6 @@ while True:
     Health_min()
     status_text()
     monster_gravity()
-
+    monster_skin()
     pygame.display.update()
     fps.tick(fps_value)
