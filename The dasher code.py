@@ -194,10 +194,14 @@ while True:
     
     if Monster_rect.x-player_rect.x>60:
         Monster_rect.x-=monster_movespeed
-        monster_left=True
         
-    elif Monster_rect.x-player_rect.x<-160:
-        Monster_rect.x+=monster_movespeed
+    elif Monster_rect.x-player_rect.x<-125:
+        Monster_rect.x+=monster_movespeed/1.4
+        
+
+    if Monster_rect.x-player_rect.x>-27:
+        monster_left=True
+    elif Monster_rect.x-player_rect.x<-32:
         monster_left=False
 
 
