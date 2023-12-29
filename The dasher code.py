@@ -22,6 +22,8 @@ dashing=False
 dash_timer=0
 DASH_DURATION = 10
 DASH_DISTANCE = 100
+dashing_ineffect0=False
+dashing_ineffect1=False
 Dash_long=8
 dash_delay = 60
 last_dash=None
@@ -80,11 +82,17 @@ def player_y_min():
     if player_rect.y > 259:
         player_rect.y = 259
 
-def distancecap():
+def player_teleport():
     if player_rect.x<=-51:
         player_rect.x=775
-    if player_rect.x>=780:
+    elif player_rect.x>=780:
         player_rect.x=-50 
+
+def wall_limet():
+    if player_rect.x<=-20:
+        player_rect.x=-20
+    elif player_rect.x>=725:
+        player_rect.x=725 
 
 def gravity():
         player_rect.y += player_fallseed
@@ -196,7 +204,7 @@ while True:
         Monster_rect.x-=monster_movespeed
         
     elif Monster_rect.x-player_rect.x<-125:
-        Monster_rect.x+=monster_movespeed/1.4
+        Monster_rect.x+=monster_movespeed/1.5
         
 
     if Monster_rect.x-player_rect.x>-27:
@@ -224,25 +232,29 @@ while True:
     else:
         player_dash1 = False
 
-    if keys[pygame.K_LSHIFT] and keys[pygame.K_w]:
-        player_dash2 = True
-    else:
-        player_dash2 = False
-
     if player_dash:
         if dash_timer < Dash_long:
             player_rect.x +=20
             dash_timer += 1
+            dashing_ineffect0=True
+        else:
+            dashing_ineffect0=False
 
     if player_dash1:
         if dash_timer < Dash_long:
             player_rect.x -=20
             dash_timer += 1
+            dashing_ineffect1=True
+        else:
+            dashing_ineffect1=False
 
     if dash_timer >= 1:
         if dash_delay > 0:
             dash_delay -=1
-            print(dash_delay)
+            print("dash cd="+str(dash_delay))
+            if dash_delay==0:
+                print("dash Available")
+                dashing=False
         else:
             dash_timer = 0
             dash_delay = 60
@@ -311,7 +323,11 @@ while True:
             gravity()
 
     #player_bleed()
-    distancecap()
+    if (dashing_ineffect0 or dashing_ineffect1) and (player_dash or player_dash1):
+        player_teleport()
+    else:
+        wall_limet()
+
     player_y_min()
     if Alive:
         combo_coloring()
