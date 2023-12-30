@@ -372,10 +372,11 @@ while True:
         if Monster_rect.colliderect(Ground_rect):
             monster_charged=False
             if Monster_rect.x-player_rect.x<=120 and Monster_rect.x-player_rect.x>=-205:
-                player_health-=monster_jump_damdge
-                combo_reset()
-                got_hit_count+=1
-                # print("hit number",got_hit_count)
+                if Monster_rect.y-player_rect.y<=70:
+                    player_health-=monster_jump_damdge
+                    combo_reset()
+                    got_hit_count+=1
+                    print("hit number",got_hit_count)
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
