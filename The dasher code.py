@@ -37,6 +37,7 @@ death_screen_surf=pygame.image.load(r'died1.jpg').convert()
 Monster=pygame.image.load(r"monsterr.png").convert_alpha()
 monster_1=pygame.image.load(r"monster1.png").convert_alpha()
 monster_2=pygame.image.load(r"monster2.png").convert_alpha()
+gameover_surf=pygame.image.load(r"gameover2.png").convert_alpha()
 Monster_rect=Monster.get_rect(midbottom=(450,352))
 monster_aircount=0
 Monster_jump_timer = 110
@@ -55,7 +56,7 @@ player_jump=2.9
 player_aircount = -8
 got_hit_count=0
 
-combo_count=4
+combo_count=0
 combo_1_size=30
 combo_2_size=40
 combo_3_size=50
@@ -80,6 +81,7 @@ left=True
 
 player_health=100
 Alive=True
+execute_once=False
 
 def playergoright():
     player_rect.x += player_movement
@@ -115,6 +117,8 @@ def lvl1():
     screen.blit(Ground_surf,(0,351))
     screen.blit(monster_surf,Monster_rect)
     screen.blit(player_surf,player_rect)
+    if not Alive:
+        screen.blit(gameover_surf,(280,0))
 
 
 def lvl2():
@@ -197,14 +201,14 @@ def combo_coloring():
         combo_color='red'
         Combo_surf=combo_font_4.render(combo, True,combo_color)
     if combo_count!=0:
-        screen.blit(Combo_surf,(400,20))
+        screen.blit(Combo_surf,(360,20))
 
 def player_dead_check():
     global level
     global Alive
     global fps_value
     if player_health<=0:
-        level=0
+        #level=0
         Alive=False
         fps_value=5
 
@@ -267,11 +271,12 @@ while True:
         if event.type==pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-            if attack_cd==0:
-                attack_cd+=15
-                player_attack()
-
+        if Alive:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
+                if attack_cd==0:
+                    attack_cd+=15
+                    player_attack()
+    
 
     player_dead_check()
 
@@ -282,6 +287,7 @@ while True:
         dashing=True
     
     monster_movement_system()
+    monster_jump_system()
 
     if Monster_rect.x-player_rect.x>-27:
         monster_left=True
@@ -338,7 +344,7 @@ while True:
     if dash_timer >= Dash_long:
         dashing=False
 
-    monster_jump_system()
+    
 
     if monster_charged and monster_aircount==0:
         if Monster_rect.colliderect(Ground_rect):
