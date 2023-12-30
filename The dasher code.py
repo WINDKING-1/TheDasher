@@ -34,6 +34,7 @@ Ground_rect=Ground_surf.get_rect(bottomleft=(0,400))
 Sky_surf2=pygame.image.load(r'sky.jpg').convert()
 Ground_surf2=pygame.image.load(r'e4.png').convert()
 death_screen_surf=pygame.image.load(r'died1.jpg').convert()
+win_screen_surf=pygame.image.load(r"win.png")
 Monster=pygame.image.load(r"monsterr.png").convert_alpha()
 monster_1=pygame.image.load(r"monster1.png").convert_alpha()
 monster_2=pygame.image.load(r"monster2.png").convert_alpha()
@@ -45,7 +46,7 @@ monster_movespeed=2.5
 monster_fallspeed=9
 monster_charged=False
 monster_jump_damdge=15
-monster_health=100
+monster_health=200
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(200,352))
@@ -54,6 +55,8 @@ player_fallseed=8
 player_jump=2.9
 player_aircount = -8
 got_hit_count=0
+
+player_surf_attack=pygame.image.load(r'player_attack.png').convert_alpha()
 
 combo_count=4
 combo_1_size=30
@@ -68,13 +71,40 @@ combo_font_4 = pygame.font.Font(r'font/Pixeltype.ttf',combo_4_size)
 player_attack_damdge=5
 attack_cd=0
 
+
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
+
+playerright_attack=pygame.transform.flip(player_surf_attack,True,False)
+playerleft_attack=pygame.transform.flip(playerright_attack,True,False)
+
+monster_surf=Monster
+def monster_skin():
+    global Monster
+    global monster_1
+    global monster_2
+    global monster_surf
+    global monster_health
+    if monster_health>=80:
+        monster_surf=Monster
+    elif monster_health>=40:
+        monster_surf=monster_1
+    elif 0<monster_health<40:
+        monster_surf=monster_2
+    else:
+        winscreen()
 
 
 monster_right_surf=pygame.transform.flip(Monster,True,False)
 monster_left_surf=pygame.transform.flip(monster_right_surf,True,False)
-monster_surf=monster_left_surf
+
+monster_right_surf1=pygame.transform.flip(monster_1,True,False)
+monster_left_surf1=pygame.transform.flip(monster_right_surf1,True,False)
+
+monster_right_surf2=pygame.transform.flip(monster_2,True,False)
+monster_left_surf2=pygame.transform.flip(monster_right_surf2,True,False)
+
+
 
 left=True
 
@@ -127,6 +157,10 @@ def deathscreen():
     screen.blit(death_screen_surf,(0,0))
     player_died=True
 
+def winscreen():
+    screen.blit(win_screen_surf,(0,0))
+    player_died=True
+
 def Health_min():
     global player_health
     if player_health<0:
@@ -167,19 +201,6 @@ def status_text():
     Health_text= str(player_health_text)+"%"
     Health_surf=Text_font.render(Health_text, True,Health_color)
     screen.blit(Health_surf,(20,20))
-
-def monster_skin():
-    global Monster
-    global monster_1
-    global monster_2
-    global monster_surf
-    global monster_health
-    if monster_health>=80:
-        monster_surf=Monster
-    elif monster_health>=40:
-        monster_surf=monster_1
-    else:
-        monster_surf=monster_2
 
 def combo_coloring():
     if combo_count!=0:
@@ -253,11 +274,11 @@ def player_attack():
     if (left and not monster_left) or (not left and monster_left):
         if player_rect.x-Monster_rect.x>=-90 and player_rect.x-Monster_rect.x<=155:
             monster_health-=player_attack_damdge
-            print(monster_health)
+            # print(monster_health)
             combo_count+=1
     elif player_rect.x-Monster_rect.x>=-30 and player_rect.x-Monster_rect.x<=95:
         monster_health-=player_attack_damdge
-        print(monster_health)
+        # print(monster_health)
         combo_count+=1
     if combo_count>=4:
         player_health+=3
@@ -269,14 +290,13 @@ while True:
             exit()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             if attack_cd==0:
-                attack_cd+=15
+                attack_cd+=25
                 player_attack()
-
-
     player_dead_check()
 
     if attack_cd!=0:
         attack_cd-=1
+        player_surf=pygame.image.load(r'player_attack.png').convert_alpha()
 
     if dash_timer!=0:
         dashing=True
@@ -327,9 +347,9 @@ while True:
     if dash_timer >= 1:
         if dash_delay > 0:
             dash_delay -=1
-            print("dash cd="+str(dash_delay))
+            # print("dash cd="+str(dash_delay))
             if dash_delay==0:
-                print("dash Available")
+                # print("dash Available")
                 dashing=False
         else:
             dash_timer = 0
@@ -347,7 +367,7 @@ while True:
                 player_health-=monster_jump_damdge
                 combo_reset()
                 got_hit_count+=1
-                print("hit number",got_hit_count)
+                # print("hit number",got_hit_count)
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
@@ -385,10 +405,20 @@ while True:
     else:
         player_surf = playerright
 
-    if monster_left:
-        monster_surf=monster_left_surf
+    if monster_left and monster_health>=80:
+        Monster=monster_left_surf
     else:
-        monster_surf=monster_right_surf
+        Monster=monster_right_surf
+
+    if monster_left and monster_health>=40:
+        monster_1=monster_left_surf1
+    else:
+        monster_1=monster_right_surf1
+
+    if monster_left and monster_health<40:
+        monster_2=monster_left_surf2
+    else:
+        monster_2=monster_right_surf2
 
     if last_dash==dash_timer:
             dashing=False
