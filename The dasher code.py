@@ -300,7 +300,10 @@ while True:
 
     if attack_cd!=0:
         attack_cd-=1
-        player_surf=pygame.image.load(r'player_attack.png').convert_alpha()
+        if left:
+            player_surf=playerleft_attack
+        else:
+            player_surf=playerright_attack
 
     if dash_timer!=0:
         dashing=True
