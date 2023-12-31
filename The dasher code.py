@@ -40,6 +40,7 @@ monster_1=pygame.image.load(r"monster1.png").convert_alpha()
 monster_2=pygame.image.load(r"monster2.png").convert_alpha()
 gameover_surf=pygame.image.load(r"gameover2.png").convert_alpha()
 Monster_rect=Monster.get_rect(midbottom=(450,352))
+fps_value2=1500 #totally not sus
 monster_aircount=0
 Monster_jump_timer = 110
 monster_jump=0.7
@@ -104,7 +105,6 @@ monster_left_surf1=pygame.transform.flip(monster_right_surf1,True,False)
 
 monster_right_surf2=pygame.transform.flip(monster_2,True,False)
 monster_left_surf2=pygame.transform.flip(monster_right_surf2,True,False)
-
 
 
 left=True
@@ -327,15 +327,16 @@ while True:
 
     keys = pygame.key.get_pressed()
 
-    if keys[pygame.K_LSHIFT] and keys[pygame.K_d]:
-        player_dash = True
-    else:
-        player_dash = False
-    
-    if keys[pygame.K_LSHIFT] and keys[pygame.K_a]:
-        player_dash1 = True
-    else:
-        player_dash1 = False
+    if Alive:
+        if keys[pygame.K_LSHIFT] and keys[pygame.K_d]:
+            player_dash = True
+        else:
+            player_dash = False
+        
+        if keys[pygame.K_LSHIFT] and keys[pygame.K_a]:
+            player_dash1 = True
+        else:
+            player_dash1 = False
 
     if player_dash:
         if dash_timer < Dash_long:
@@ -366,8 +367,6 @@ while True:
 
     if dash_timer >= Dash_long:
         dashing=False
-
-    
 
     if monster_charged and monster_aircount==0:
         if Monster_rect.colliderect(Ground_rect):
@@ -451,5 +450,6 @@ while True:
     status_text()
     monster_gravity()
     monster_skin()
+    
     pygame.display.update()
-    fps.tick(fps_value)
+    fps.tick(fps_value2) #Surely i didn't change it and added 2 to the name...
