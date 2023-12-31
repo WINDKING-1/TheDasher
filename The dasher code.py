@@ -222,7 +222,7 @@ def combo_coloring():
         combo_color='red'
         Combo_surf=combo_font_4.render(combo, True,combo_color)
     if combo_count!=0:
-        screen.blit(Combo_surf,(360,20))
+        screen.blit(Combo_surf,(20,40))
 
 def player_dead_check():
     global level
@@ -300,10 +300,11 @@ while True:
 
     if attack_cd!=0:
         attack_cd-=1
-        if left:
-            player_surf=playerleft_attack
-        else:
-            player_surf=playerright_attack
+        if attack_cd>10:
+            if left:
+                player_surf=playerleft_attack
+            else:
+                player_surf=playerright_attack
 
     if dash_timer!=0:
         dashing=True
@@ -372,11 +373,11 @@ while True:
         if Monster_rect.colliderect(Ground_rect):
             monster_charged=False
             if Monster_rect.x-player_rect.x<=120 and Monster_rect.x-player_rect.x>=-205:
-                if Monster_rect.y-player_rect.y<=70:
+                if Monster_rect.y-player_rect.y<=65:
                     player_health-=monster_jump_damdge
                     combo_reset()
                     got_hit_count+=1
-                    print("hit number",got_hit_count)
+                    #print("hit number",got_hit_count)
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
