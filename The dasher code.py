@@ -17,7 +17,6 @@ level=1
 
 player_dash = False
 player_dash1 = False
-player_dash2 = False
 dashing=False
 dash_timer=0
 DASH_DURATION = 10
