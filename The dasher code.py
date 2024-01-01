@@ -40,15 +40,15 @@ monster_1=pygame.image.load(r"monster1.png").convert_alpha()
 monster_2=pygame.image.load(r"monster2.png").convert_alpha()
 gameover_surf=pygame.image.load(r"gameover2.png").convert_alpha()
 Monster_rect=Monster.get_rect(midbottom=(450,352))
-fps_value2=1500 #totally not sus
 monster_aircount=0
-Monster_jump_timer = 110
+Monster_jump_timer = 100
 monster_jump=0.7
 monster_movespeed=2.5
 monster_fallspeed=9
 monster_charged=False
 monster_jump_damdge=15
 monster_health=200
+monster_mad=False
 
 player_surf=pygame.image.load(r'e3.png').convert_alpha()
 player_rect=player_surf.get_rect(midbottom=(200,352))
@@ -87,11 +87,13 @@ def monster_skin():
     global monster_2
     global monster_surf
     global monster_health
-    if monster_health>=80:
+    global monster_mad
+    if monster_health>=140:
         monster_surf=Monster
-    elif monster_health>=40:
+    elif monster_health>=110:
         monster_surf=monster_1
-    elif 0<monster_health<40:
+        monster_mad=True
+    elif 0<monster_health<100:
         monster_surf=monster_2
     else:
         winscreen()
@@ -242,18 +244,32 @@ def monster_jump_system():
     global monster_aircount
     global Monster_rect
     global monster_charged
+    global monster_health
+    global monster_mad
+    if monster_mad:
+        if Monster_jump_timer >= 0:
+            Monster_jump_timer -= 1
 
-    if Monster_jump_timer >= 0:
-        Monster_jump_timer -= 1
+        if Monster_jump_timer <= 0:
+            monster_aircount = -35
+            Monster_jump_timer = 70
+            monster_charged=True
 
-    if Monster_jump_timer <= 0:
-        monster_aircount = -34
-        Monster_jump_timer = 150
-        monster_charged=True
+        if monster_aircount < 0:
+            Monster_rect.y += monster_aircount * monster_jump
+            monster_aircount += 1
+    else:
+        if Monster_jump_timer >= 0:
+            Monster_jump_timer -= 1
 
-    if monster_aircount < 0:
-        Monster_rect.y += monster_aircount * monster_jump
-        monster_aircount += 1
+        if Monster_jump_timer <= 0:
+            monster_aircount = -33
+            Monster_jump_timer = 130
+            monster_charged=True
+
+        if monster_aircount < 0:
+            Monster_rect.y += monster_aircount * monster_jump
+            monster_aircount += 1
 
 def monster_movement_system():
     global Monster_rect
@@ -280,10 +296,12 @@ def player_attack():
             monster_health-=player_attack_damdge
             # print(monster_health)
             combo_count+=1
+
     elif player_rect.x-Monster_rect.x>=-30 and player_rect.x-Monster_rect.x<=95:
         monster_health-=player_attack_damdge
         # print(monster_health)
         combo_count+=1
+
     if combo_count>=4:
         player_health+=3
 
@@ -296,6 +314,7 @@ while True:
             if attack_cd==0:
                 attack_cd+=25
                 player_attack()
+
     player_dead_check()
 
     if attack_cd!=0:
@@ -373,10 +392,14 @@ while True:
             monster_charged=False
             if Monster_rect.x-player_rect.x<=120 and Monster_rect.x-player_rect.x>=-205:
                 if Monster_rect.y-player_rect.y<=65:
-                    player_health-=monster_jump_damdge
+                    if monster_mad:
+                        player_health-=monster_jump_damdge/1.5
+                    else:
+                        player_health-=monster_jump_damdge
                     combo_reset()
                     got_hit_count+=1
                     #print("hit number",got_hit_count)
+            
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
@@ -414,17 +437,17 @@ while True:
     else:
         player_surf = playerright
 
-    if monster_left and monster_health>=80:
+    if monster_left and monster_health>=140:
         Monster=monster_left_surf
     else:
         Monster=monster_right_surf
 
-    if monster_left and monster_health>=40:
+    if monster_left and monster_health>=100:
         monster_1=monster_left_surf1
     else:
         monster_1=monster_right_surf1
 
-    if monster_left and monster_health<40:
+    if monster_left and monster_health<100:
         monster_2=monster_left_surf2
     else:
         monster_2=monster_right_surf2
@@ -442,7 +465,6 @@ while True:
         player_teleport()
     else:
         wall_limet()
-
     player_y_min()
     if Alive:
         combo_coloring()
@@ -452,4 +474,4 @@ while True:
     monster_skin()
     
     pygame.display.update()
-    fps.tick(fps_value2) #Surely i didn't change it and added 2 to the name...
+    fps.tick(fps_value)
