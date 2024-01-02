@@ -37,6 +37,7 @@ Monster=pygame.image.load(r"monsterr.png").convert_alpha()
 monster_1=pygame.image.load(r"monster1.png").convert_alpha()
 monster_2=pygame.image.load(r"monster2.png").convert_alpha()
 gameover_surf=pygame.image.load(r"gameover2.png").convert_alpha()
+
 Monster_rect=Monster.get_rect(midbottom=(450,352))
 monster_aircount=0
 Monster_jump_timer = 100
@@ -70,7 +71,6 @@ combo_font_4 = pygame.font.Font(r'font/Pixeltype.ttf',combo_4_size)
 
 player_attack_damdge=5
 attack_cd=0
-
 
 playerright=pygame.transform.flip(player_surf,True,False)
 playerleft=pygame.transform.flip(playerright,True,False)
@@ -221,7 +221,6 @@ def player_dead_check():
     global Alive
     global fps_value
     if player_health<=0:
-        #level=0
         Alive=False
         fps_value=5
 
@@ -320,7 +319,6 @@ while True:
         monster_left=True
     elif Monster_rect.x-player_rect.x<-32:
         monster_left=False
-
 
     if level==1:
         lvl1()
