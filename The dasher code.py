@@ -462,6 +462,7 @@ while True:
                 player_surf=playerleft_attack
             else:
                 player_surf=playerright_attack
+
     player_bleed()
     if (dashing_ineffect0 or dashing_ineffect1) and (player_dash or player_dash1):
         player_teleport()
