@@ -26,13 +26,12 @@ dashing_ineffect1=False
 Dash_long=8
 dash_delay = 60
 last_dash=None
-double_jumped=False
+
 Sky_surf=pygame.image.load(r'bettersky.png').convert()
 Ground_surf=pygame.image.load(r'download.png').convert()
 Ground_rect=Ground_surf.get_rect(bottomleft=(0,400))
 Sky_surf2=pygame.image.load(r'sky.jpg').convert()
 Ground_surf2=pygame.image.load(r'e4.png').convert()
-death_screen_surf=pygame.image.load(r'died1.jpg').convert()
 win_screen_surf=pygame.image.load(r"win.png")
 Monster=pygame.image.load(r"monsterr.png").convert_alpha()
 monster_1=pygame.image.load(r"monster1.png").convert_alpha()
@@ -54,8 +53,8 @@ player_rect=player_surf.get_rect(midbottom=(200,352))
 player_movement=5
 player_fallseed=8
 player_jump=2.9
-player_aircount = -8
-got_hit_count=0
+player_aircount = 0
+
 
 player_surf_attack=pygame.image.load(r'player_attack.png').convert_alpha()
 
@@ -150,17 +149,6 @@ def lvl1():
     screen.blit(player_surf,player_rect)
     if not Alive:
         screen.blit(gameover_surf,(280,0))
-
-
-def lvl2():
-    screen.blit(Sky_surf2,(-570,-500))
-    screen.blit(Ground_surf2,(0,351))
-    screen.blit(player_surf,player_rect)
-
-
-def deathscreen():
-    screen.blit(death_screen_surf,(0,0))
-    player_died=True
 
 def winscreen():
     screen.blit(win_screen_surf,(0,0))
@@ -298,14 +286,16 @@ def player_attack():
             monster_health-=player_attack_damdge
             # print(monster_health)
             combo_count+=1
+            if combo_count>=4:
+                player_health+=3
 
     elif player_rect.x-Monster_rect.x>=-30 and player_rect.x-Monster_rect.x<=95:
         monster_health-=player_attack_damdge
         # print(monster_health)
         combo_count+=1
+        if combo_count>=4:
+            player_health+=3
 
-    if combo_count>=4:
-        player_health+=3
 
 while True:
     for event in pygame.event.get():
@@ -334,10 +324,6 @@ while True:
 
     if level==1:
         lvl1()
-    elif level==2:
-        lvl2()
-    elif level==0:
-        deathscreen()
 
     keys = pygame.key.get_pressed()
 
@@ -392,15 +378,11 @@ while True:
                     else:
                         player_health-=monster_jump_damdge
                     combo_reset()
-                    got_hit_count+=1
-                    #print("hit number",got_hit_count)
-            
 
     if Alive:
         if player_rect.colliderect(Ground_rect):
             airborn=False
             player_aircount=0
-            double_jumped=False
         else:
             airborn=True
 
@@ -421,11 +403,6 @@ while True:
         if keys[pygame.K_SPACE] and not airborn:
             player_rect.y -= player_jump
             player_aircount = -9
-
-        if keys[pygame.K_SPACE] and airborn and player_aircount==0 and not double_jumped:
-                player_rect.y -= player_jump
-                player_aircount = -6
-                double_jumped=True
 
     if left:
         player_surf = playerleft
