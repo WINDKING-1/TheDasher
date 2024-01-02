@@ -92,7 +92,7 @@ def monster_skin():
     elif monster_health>=110:
         monster_surf=monster_1
         monster_mad=True
-    elif 0<monster_health<100:
+    elif 0<monster_health<110:
         monster_surf=monster_2
     else:
         winscreen()
@@ -206,6 +206,9 @@ def status_text():
     Health_text= str(player_health_text)+"%"
     Health_surf=Text_font.render(Health_text, True,Health_color)
     screen.blit(Health_surf,(20,20))
+    monster_Health_text= str(monster_health/2)+"%"
+    monster_Health_surf=combo_font_3.render(monster_Health_text, True,'red')
+    screen.blit(monster_Health_surf,(360,20))
 
 def combo_coloring():
     if combo_count!=0:
@@ -315,14 +318,6 @@ while True:
                 player_attack()
 
     player_dead_check()
-
-    if attack_cd!=0:
-        attack_cd-=1
-        if attack_cd>10:
-            if left:
-                player_surf=playerleft_attack
-            else:
-                player_surf=playerright_attack
 
     if dash_timer!=0:
         dashing=True
@@ -441,12 +436,12 @@ while True:
     else:
         Monster=monster_right_surf
 
-    if monster_left and monster_health>=100:
+    if monster_left and monster_health>=110:
         monster_1=monster_left_surf1
     else:
         monster_1=monster_right_surf1
 
-    if monster_left and monster_health<100:
+    if monster_left and monster_health<110:
         monster_2=monster_left_surf2
     else:
         monster_2=monster_right_surf2
@@ -459,6 +454,13 @@ while True:
         if not dashing:
             gravity()
 
+    if attack_cd!=0:
+        attack_cd-=1
+        if attack_cd>10:
+            if left:
+                player_surf=playerleft_attack
+            else:
+                player_surf=playerright_attack
     player_bleed()
     if (dashing_ineffect0 or dashing_ineffect1) and (player_dash or player_dash1):
         player_teleport()
