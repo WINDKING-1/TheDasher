@@ -254,7 +254,7 @@ def monster_jump_system():
 
         if Monster_jump_timer <= 0:
             monster_aircount = -35
-            Monster_jump_timer = 70
+            Monster_jump_timer = 75
             monster_charged=True
 
         if monster_aircount < 0:
