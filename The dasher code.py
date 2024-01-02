@@ -313,9 +313,10 @@ while True:
             pygame.quit()
             exit()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-            if attack_cd==0:
-                attack_cd+=25
-                player_attack()
+            if Alive:
+                if attack_cd==0:
+                    attack_cd+=25
+                    player_attack()
 
     player_dead_check()
 
