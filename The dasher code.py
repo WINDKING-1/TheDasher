@@ -19,7 +19,7 @@ player_dash = False
 player_dash1 = False
 dashing=False
 dash_timer=0
-DASH_DURATION = 10
+
 DASH_DISTANCE = 100
 dashing_ineffect0=False
 dashing_ineffect1=False
