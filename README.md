@@ -1,2 +1,2 @@
 # The_Dasher
- The pygame project for 3 uni students :)
+ The pygame project made by 3 uni students :)
